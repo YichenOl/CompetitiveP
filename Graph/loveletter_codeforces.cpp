@@ -5,12 +5,13 @@ typedef long long ll;
 #define fi first
 #define se second
 
-//partial
+//ACed!
 int main() {
 	int n, k; cin >> n >> k;
-	vector<int> v(n);
+	vector<pii> v(n);
 	for(int i=0; i<n; i++) {
-		cin >> v[i];
+		cin >> v[i].fi;
+		v[i].se=i;
 	}
 	vector<pii> fri(k);
 	for(int i=0; i<k; i++) {
@@ -18,16 +19,16 @@ int main() {
 		cin >> fri[i].se;
 	}
 	
-	vector<vector<int>> adj(n, vector<int> (n, -1));
-	for(int i=0; i<n; i++) {
-		for(int j=0; j<n; j++) {
-			if(adj[i][j]!=-1) continue;
-			adj[i][j]=abs(v[i]-v[j]);
-		}
+	sort(v.begin(), v.end());
+	vector<vector<pair<int, int>>> adj(n);
+	for(int i=0; i<n-1; i++) {
+		adj[v[i].se].push_back({v[i+1].fi-v[i].fi, v[i+1].se});
+		adj[v[i+1].se].push_back({v[i+1].fi-v[i].fi, v[i].se});
 	}
+	
 	for(auto i:fri) {
-		adj[i.fi-1][i.se-1]=0;
-		adj[i.se-1][i.fi-1]=0;
+		adj[i.fi-1].push_back({0, i.se-1});
+		adj[i.se-1].push_back({0, i.fi-1});
 	}
 	
 	priority_queue<pii, vector<pii>, greater<pii>> pq;
@@ -39,11 +40,10 @@ int main() {
 		int node=pq.top().se;
 		pq.pop();
 		if(dis[node]<time) continue;
-		for(int i=0; i<n; i++) {
-			if(i==node) continue;
-			if(dis[i]>(time+adj[i][node])) {
-				dis[i]=time+adj[i][node];
-				pq.push({dis[i], i});
+		for(auto i:adj[node]) {
+			if(dis[i.se]>(time+i.fi)) {
+				dis[i.se]=(time+i.fi);
+				pq.push({dis[i.se], i.se});
 			}
 		}
 	}
