@@ -14,6 +14,7 @@ int32_t main() {
 	vector<vector<vector<pair<int, int>>>> v(h, vector<vector<pair<int, int>>>(w, vector<pair<int, int>>() ) );
 	int lh[] = {0, 1, 0, -1};
 	int lw[] = {-1, 0, 1, 0};
+	
 	fori(h) {
 		forj(w) {
 			char t; cin >> t;
@@ -46,6 +47,11 @@ int32_t main() {
 		}
 		
 	}
+// list out safe empty
+//	for(auto i:ini) {
+//		cout << i.fi << ' ' << i.se<<'\n';
+//	}
+	
 //	for(auto i:grw) cout << i << ' ';
 //	cout << '\n';
 //	for(auto i:gcl) cout << i << ' ';
@@ -53,15 +59,17 @@ int32_t main() {
 //		cout << i.fi << ' '<< i.se << '\n';
 //	}
 //	
-	for(auto i: v) {
-		for(auto j:i) {
-			for(auto p:j) {
-				cout << p.fi << ' '<< p.se << "   ";
-			}
-			cout << '\n';
-		}
-		cout << '\n';
-	}
+	
+//output adj list
+//	for(auto i: v) {
+//		for(auto j:i) {
+//			for(auto p:j) {
+//				cout << p.fi << ' '<< p.se << "   ";
+//			}
+//			cout << '\n';
+//		}
+//		cout << '\n';
+//	}
 	vector<vector<int>> dist(h, vector<int>(w, 1e9));
 	queue<pair<int, int>> q;
 	for(auto i:ini) {
@@ -70,23 +78,25 @@ int32_t main() {
 	}
 	
 	while(!q.empty()) {
-		pair<int, int> c = q.back();
+		pair<int, int> c = q.front();
 		int cd = dist[c.fi][c.se];
 		q.pop();
 		for(auto i:v[c.fi][c.se]) {
 			if(dist[i.fi][i.se]>cd+1) {
 				dist[i.fi][i.se]=cd+1;
 				q.push({i.fi,i.se});
+//				cout << i.fi <<' '<<i.se <<"   ";
 			}
 		}
 	}
+	
 	int ans = 0;
-//	for(auto i:dist) {
-//		for(auto j:i) {
+	for(auto i:dist) {
+		for(auto j:i) {
 //			cout << j << ' ';
-////			if(j<=k) ans+=1;
-//		}
+			if(j<=k) ans+=1;
+		}
 //		cout << '\n';
-//	}
+	}
 	cout << ans;
 }
